@@ -22,15 +22,18 @@ public class CsvReader implements Reader {
 
         List<List<String>> csvStringList = new ArrayList<>();
 
-        try (Stream<String> stream = Files.lines(Paths.get(PREFIX+fileName+SUFFIX))) {
-
-            csvStringList = stream
-                    .map(line -> Arrays.asList(line.split(DELIMETER)))
-                    .collect(Collectors.toList());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        csvStringList.add(Arrays.asList("id", "title", "author"));
+        csvStringList.add(Arrays.asList("1", "title1", "author1"));
+        csvStringList.add(Arrays.asList("2", "title2", "author2"));
+//        try (Stream<String> stream = Files.lines(Paths.get(PREFIX+fileName+SUFFIX))) {
+//
+//            csvStringList = stream
+//                    .map(line -> Arrays.asList(line.split(DELIMETER)))
+//                    .collect(Collectors.toList());
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         return csvStringList;
 

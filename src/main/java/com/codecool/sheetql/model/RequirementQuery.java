@@ -17,11 +17,6 @@ public class RequirementQuery {
     private static final int FIELDS = 0;
 
 
-    public RequirementQuery(List<String> selectFromCondition, List<String> whereCondition) {
-        this.selectFromCondition = selectFromCondition;
-        this.whereCondition = whereCondition;
-    }
-
     public List<String> getSelectFromCondition() {
         return selectFromCondition;
     }
@@ -31,7 +26,16 @@ public class RequirementQuery {
     }
 
     public String getTableName() {
+        System.out.println("Table name is: " + selectFromCondition.get(TABLE_NAME));
         return selectFromCondition.get(TABLE_NAME);
+    }
+
+    public void setSelectFromCondition(List<String> selectFromCondition) {
+        this.selectFromCondition = selectFromCondition;
+    }
+
+    public void setWhereCondition(List<String> whereCondition) {
+        this.whereCondition = whereCondition;
     }
 
     public List<String> getQueryFieldsList() {
@@ -42,5 +46,9 @@ public class RequirementQuery {
 
     public List<String> getConditionList() {
         return whereCondition;
+    }
+
+    public String toString() {
+        return "SELECT condition listis: " + selectFromCondition + " :: WHERE condition list: " + whereCondition;
     }
 }
