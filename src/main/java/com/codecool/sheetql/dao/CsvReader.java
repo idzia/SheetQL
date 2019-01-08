@@ -14,13 +14,15 @@ import java.util.stream.Stream;
 
 @Component
 public class CsvReader implements Reader {
+    private static final String PREFIX= ""; //"./main/resources/static/csv/";
+    private static final String SUFFIX = ".csv";
     private static final String DELIMETER= ",";
 
     public List<List<String>> read(String fileName) {
 
         List<List<String>> csvStringList = new ArrayList<>();
 
-        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
+        try (Stream<String> stream = Files.lines(Paths.get(PREFIX+fileName+SUFFIX))) {
 
             csvStringList = stream
                     .map(line -> Arrays.asList(line.split(DELIMETER)))

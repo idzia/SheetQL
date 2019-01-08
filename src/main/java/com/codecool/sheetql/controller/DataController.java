@@ -1,6 +1,7 @@
 package com.codecool.sheetql.controller;
 
 import com.codecool.sheetql.service.DataService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 @RestController
 public class DataController {
 
+    @Autowired
     private DataService dataService;
 
 
@@ -22,10 +24,11 @@ public class DataController {
 //        return dataService.inputQuery(query);
 //    }
 
-   // @GetMapping("/index/{select}")
-   // public List<List<String>> inputQuery(@PathVariable("select") String query) {
-  //      return dataService.inputQuery(query);
-  //  }
+    @GetMapping("/index/{select}")
+    public List<List<String>> inputQuery(@PathVariable("select") String query) {
+        System.out.println("Query is: " + query);
+        return dataService.inputQuery(query);
+    }
 
 
 }

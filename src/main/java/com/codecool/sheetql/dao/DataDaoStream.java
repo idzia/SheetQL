@@ -26,6 +26,10 @@ public class DataDaoStream implements DataDao {
     public DataDaoStream(Reader reader, RequirementQuery requirementQuery) {
         this.reader = reader;
         this.requirementQuery = requirementQuery;
+
+    }
+
+    public void execute(){
         String fileName = requirementQuery.getTableName();
         this.fieldsNameMap = getFieldsNameMap(fileName);
     }
@@ -50,7 +54,7 @@ public class DataDaoStream implements DataDao {
     }
 
     public List<List<String>> select(RequirementQuery requirementQuery) {
-
+        execute();
         String fileName = requirementQuery.getTableName();
 
         List<String> fieldsNameList = getFieldsNameList(fileName);

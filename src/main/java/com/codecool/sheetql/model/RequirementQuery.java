@@ -16,6 +16,7 @@ public class RequirementQuery {
     private static final int TABLE_NAME = 1;
     private static final int FIELDS = 0;
 
+
     public RequirementQuery(List<String> selectFromCondition, List<String> whereCondition) {
         this.selectFromCondition = selectFromCondition;
         this.whereCondition = whereCondition;

@@ -6,6 +6,7 @@ import com.codecool.sheetql.parser.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,8 @@ public class DataService {
 
     public List<List<String>> inputQuery(String inputQuery){
         Optional<RequirementQuery> optional = parser.parse(inputQuery);
-        List<List<String>> answer = null;
+        List<List<String>> answer = new ArrayList<>();
+        answer.add(new ArrayList<>());
         if (optional.isPresent()) {
             RequirementQuery requirement = optional.get();
 
