@@ -55,8 +55,6 @@ public class DataDaoStream implements DataDao {
 
     public List<List<String>> select(RequirementQuery requirementQuery) {
         this.requirementQuery = requirementQuery;
-        System.out.println("DataDaoService default requirement query: " + this.requirementQuery.toString());
-        System.out.println("start select() in DataDaoStrem.java");
         execute();
         String fileName = requirementQuery.getTableName();
 

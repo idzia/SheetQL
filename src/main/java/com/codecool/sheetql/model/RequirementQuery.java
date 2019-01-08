@@ -26,7 +26,6 @@ public class RequirementQuery {
     }
 
     public String getTableName() {
-        System.out.println("Table name is: " + selectFromCondition.get(TABLE_NAME));
         return selectFromCondition.get(TABLE_NAME);
     }
 

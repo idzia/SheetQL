@@ -29,7 +29,6 @@ public class Parser {
 
     public Optional<RequirementQuery> parse (String query) {
 
-        System.out.println("Start parse() in Parser.java");
         List<String> selectFromList = null;
         List<String> whereList= null;
 
@@ -38,29 +37,16 @@ public class Parser {
                     .map(item -> item.trim())
                     .skip(1)
                     .collect(Collectors.toList());
-            System.out.println("After first split list is: " + selectFromList);
-            System.out.println("Initialize new requirement query.");
 
             this.requirementQuery = new RequirementQuery();
-            System.out.println(requirementQuery.toString());
 
             this.requirementQuery.setSelectFromCondition(selectFromList);
-            System.out.println("After setting the list it is: " + requirementQuery.toString());
-            System.out.println("\n\nValidation of WHERE part :: is valid: " + validateWhere(getWhere()) + "\n WHERE is: " + getWhere());
             if (validateWhere(getWhere())) {
                 whereList = getValidWhereCondition();
-                System.out.println("Valid where list is: " + whereList);
-
                 this.requirementQuery.setWhereCondition(whereList);
             }
         }
-
-        System.out.println("Final requirementStatement is: " + requirementQuery.toString());
-
         Optional<RequirementQuery> optional = Optional.ofNullable(requirementQuery);
-
-        System.out.println("End parse() in Parser.java");
-
         return optional;
     }
 
@@ -68,9 +54,6 @@ public class Parser {
 
         Pattern compileSelectFrom = Pattern.compile(REGEX);
         Pattern compileSelectFromWhere = Pattern.compile(REGEX_WHERE);
-
-        System.out.println("SELECT REGEX for:: " + query + " is: " + compileSelectFrom.matcher(query).matches());
-
         if (compileSelectFrom.matcher(query).matches() || compileSelectFromWhere.matcher(query).matches()){
             return true;
         }

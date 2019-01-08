@@ -24,14 +24,10 @@ public class DataService {
 
     public List<List<String>> inputQuery(String inputQuery){
         Optional<RequirementQuery> optional = parser.parse(inputQuery);
-        System.out.println("Optional is present: " + optional.isPresent());
         List<List<String>> answer = new ArrayList<>();
         answer.add(new ArrayList<>());
         if (optional.isPresent()) {
             RequirementQuery requirement = optional.get();
-
-            System.out.println("DataService.java requirementQuery is: " + optional.get().toString());
-
             answer = dataDao.select(requirement);
 
         } else throw new IllegalArgumentException("Query not valid");
