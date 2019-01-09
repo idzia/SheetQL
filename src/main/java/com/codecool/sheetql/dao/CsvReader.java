@@ -31,8 +31,13 @@ public class CsvReader implements Reader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        List<List<String>> table = new ArrayList<>();
+        List<String> row = Arrays.asList(new String[] {"id", "title", "author"});
+        List<String> row1 = Arrays.asList(new String[] {"1", "title1", "author1"});
+        table.add(row);
+        table.add(row1);
 
-        return csvStringList;
-
+        //return csvStringList;
+        return table;
     }
 }

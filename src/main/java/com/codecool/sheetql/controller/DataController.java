@@ -27,6 +27,7 @@ public class DataController {
     @GetMapping("/index/{select}")
     public List<List<String>> inputQuery(@PathVariable("select") String query) {
         System.out.println("Query is: " + query);
+
         return dataService.inputQuery(query);
     }
 

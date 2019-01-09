@@ -1,6 +1,7 @@
 package com.codecool.sheetql.parser;
 
 import com.codecool.sheetql.model.RequirementQuery;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -12,13 +13,13 @@ import java.util.stream.Collectors;
 
 @Component
 public class Parser {
-    private List<String> parsedQueryList;
-    private List<String> validWhereConditionList;
+//    private List<String> parsedQueryList;
+//    private List<String> validWhereConditionList;
     private RequirementQuery requirementQuery;
     private static final String DELIMETER = "SELECT|FROM|WHERE|select|from|where";
     private static final String OR_AND = "OR|AND|or|and";
-    private static final String REGEX = "^SELECT\\s.+\\sFROM\\s.+\\.CSV$";
-    private static final String REGEX_WHERE = "^SELECT\\s.+\\sFROM\\s.+\\.CSV\\sWHERE\\s.+$";
+    private static final String REGEX = "^SELECT\\s.+\\sFROM\\s.+$";
+    private static final String REGEX_WHERE = "^SELECT\\s.+\\sFROM\\s.+\\sWHERE\\s.+$";
 
     private static final int FIELDS = 0;
     private static final int FILE_NAME = 1;
@@ -37,22 +38,22 @@ public class Parser {
                     .map(item -> item.trim())
                     .skip(1)
                     .collect(Collectors.toList());
-            if (validateWhere(getWhere())) {
-                whereList = getValidWhereCondition();
-
+            System.out.println("select_from: " + selectFromList);
+            if (validateWhere(getWhere(selectFromList))) {
+                whereList = getValidWhereCondition(selectFromList);
+                System.out.println("where: " + whereList);
+                this.requirementQuery = new RequirementQuery(selectFromList, whereList);
 
             }
         }
 
-        this.requirementQuery = new RequirementQuery(selectFromList, whereList);
 
-        Optional<RequirementQuery> optional = Optional.ofNullable(requirementQuery);
+        Optional<RequirementQuery> optional = Optional.ofNullable(this.requirementQuery);
 
         return optional;
     }
 
     private boolean validate(String query) {
-
         Pattern compileSelectFrom = Pattern.compile(REGEX);
         Pattern compileSelectFromWhere = Pattern.compile(REGEX_WHERE);
 
@@ -73,14 +74,16 @@ public class Parser {
 //        return parsedQueryList.get(FILE_NAME);
 //    }
 
-    public String getWhere() {
-        if (parsedQueryList.size()==3){
-            return parsedQueryList.get(WHERE_CONDITION).toUpperCase();
+    public String getWhere(List<String> selectFromList) {
+
+        if (selectFromList.size()==3){
+
+            return selectFromList.get(WHERE_CONDITION).toUpperCase();
         } else return "";
     }
 
-    public List<String> getValidWhereCondition() {
-        String whereCondition = getWhere();
+    public List<String> getValidWhereCondition(List<String> selectFromList) {
+        String whereCondition = getWhere(selectFromList);
         List<String> conditionList = new ArrayList<>();
 
         if (whereCondition.contains(" LIKE '")) {

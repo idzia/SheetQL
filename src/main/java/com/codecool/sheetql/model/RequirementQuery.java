@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+
 public class RequirementQuery {
 
     private List<String> selectFromCondition;
@@ -31,6 +31,7 @@ public class RequirementQuery {
     }
 
     public String getTableName() {
+        System.out.println("TABLE NAME: " + selectFromCondition);
         return selectFromCondition.get(TABLE_NAME);
     }
 

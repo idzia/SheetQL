@@ -22,10 +22,16 @@ public class DataDaoStream implements DataDao {
 
     public static final Integer HEADERS_INDEX  = 0;
 
+//    @Autowired
+//    public DataDaoStream(Reader reader, RequirementQuery requirementQuery) {
+//        this.reader = reader;
+//        this.requirementQuery = requirementQuery;
+//
+//    }
+
     @Autowired
-    public DataDaoStream(Reader reader, RequirementQuery requirementQuery) {
+    public DataDaoStream(Reader reader) {
         this.reader = reader;
-        this.requirementQuery = requirementQuery;
 
     }
 
@@ -54,6 +60,7 @@ public class DataDaoStream implements DataDao {
     }
 
     public List<List<String>> select(RequirementQuery requirementQuery) {
+        this.requirementQuery = requirementQuery;
         execute();
         String fileName = requirementQuery.getTableName();
 

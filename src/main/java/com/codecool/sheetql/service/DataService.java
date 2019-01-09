@@ -23,12 +23,15 @@ public class DataService {
     }
 
     public List<List<String>> inputQuery(String inputQuery){
+        System.out.println("entered services");
         Optional<RequirementQuery> optional = parser.parse(inputQuery);
+        System.out.println("optional was created: " + optional.isPresent());
+        System.out.println(optional.get().getWhereCondition());
         List<List<String>> answer = new ArrayList<>();
         answer.add(new ArrayList<>());
         if (optional.isPresent()) {
             RequirementQuery requirement = optional.get();
-
+            System.out.println("select where con from requirement " + requirement.getSelectFromCondition());
             answer = dataDao.select(requirement);
 
         } else throw new IllegalArgumentException("Query not valid");
