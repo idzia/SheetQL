@@ -28,7 +28,6 @@ public class DataService {
         answer.add(new ArrayList<>());
         if (optional.isPresent()) {
             RequirementQuery requirement = optional.get();
-
             answer = dataDao.select(requirement);
 
         } else throw new IllegalArgumentException("Query not valid");
