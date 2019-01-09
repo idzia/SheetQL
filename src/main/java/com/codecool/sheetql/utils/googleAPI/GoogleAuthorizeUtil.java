@@ -9,6 +9,7 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.MemoryDataStoreFactory;
 import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.drive.DriveScopes;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +27,7 @@ public class GoogleAuthorizeUtil {
 
         try {
             clientSecrets = GoogleClientSecrets.load(JacksonFactory.getDefaultInstance(), new InputStreamReader(in));
-            List<String> scopes = Arrays.asList(SheetsScopes.SPREADSHEETS);
+            List<String> scopes = Arrays.asList(SheetsScopes.SPREADSHEETS, DriveScopes.DRIVE_METADATA_READONLY);
             GoogleAuthorizationCodeFlow flow = null;
 
             flow = new GoogleAuthorizationCodeFlow
@@ -36,6 +37,8 @@ public class GoogleAuthorizeUtil {
 
             Credential credential = null;
 
+            String url = flow.newAuthorizationUrl().setRedirectUri("http://localhost:8080/index").build();
+            System.out.println(url);
             return credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
 
             } catch (GeneralSecurityException | IOException e) {
