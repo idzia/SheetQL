@@ -1,6 +1,5 @@
 package com.codecool.sheetql.service;
 
-import com.codecool.sheetql.dao.DataDao;
 import com.codecool.sheetql.model.RequirementQuery;
 import com.codecool.sheetql.parser.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +12,12 @@ import java.util.Optional;
 @Service
 public class DataService {
 
-    private DataDao dataDao;
+    private StreamService streamService;
     private Parser parser;
 
     @Autowired
-    public DataService(DataDao dataDao, Parser parser) {
-        this.dataDao = dataDao;
+    public DataService(StreamService streamService, Parser parser) {
+        this.streamService = streamService;
         this.parser = parser;
     }
 
@@ -28,7 +27,7 @@ public class DataService {
         answer.add(new ArrayList<>());
         if (optional.isPresent()) {
             RequirementQuery requirement = optional.get();
-            answer = dataDao.select(requirement);
+            answer = streamService.select(requirement);
 
         } else throw new IllegalArgumentException("Query not valid");
 

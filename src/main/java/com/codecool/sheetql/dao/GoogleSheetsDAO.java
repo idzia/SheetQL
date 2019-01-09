@@ -10,18 +10,18 @@ import java.util.stream.Collectors;
 
 @Component
 @Primary
-public class GoogleSheetsReader implements Reader {
+public class GoogleSheetsDAO implements PersistenceDAO {
 
     private static final String DEFAULT_SPREADSHEETID = "1OrTcgTSKQnNMNIy6rfOK3VEKc1lgsZaN0pq6ht8yYoA";
 
     private String spreadsheetid = DEFAULT_SPREADSHEETID;
     private Sheets sheetsService;
 
-    public GoogleSheetsReader() {
+    public GoogleSheetsDAO() {
         this.sheetsService = SheetsServiceUtil.getSheetsService();
     }
 
-    public GoogleSheetsReader(String spreadSheetID) {
+    public GoogleSheetsDAO(String spreadSheetID) {
         super();
         this.spreadsheetid = spreadSheetID;
     }

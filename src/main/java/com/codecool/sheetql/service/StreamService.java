@@ -1,5 +1,6 @@
-package com.codecool.sheetql.dao;
+package com.codecool.sheetql.service;
 
+import com.codecool.sheetql.dao.PersistenceDAO;
 import com.codecool.sheetql.model.RequirementQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,18 +14,18 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@Repository
-public class DataDaoStream implements DataDao {
+@Component
+public class StreamService {
 
     private Map<String, Integer> fieldsNameMap;
-    private Reader reader;
+    private PersistenceDAO persistenceDAO;
     private RequirementQuery requirementQuery;
 
     public static final Integer HEADERS_INDEX  = 0;
 
     @Autowired
-    public DataDaoStream(Reader reader, RequirementQuery requirementQuery) {
-        this.reader = reader;
+    public StreamService(PersistenceDAO persistenceDAO, RequirementQuery requirementQuery) {
+        this.persistenceDAO = persistenceDAO;
         this.requirementQuery = requirementQuery;
 
     }
@@ -46,7 +47,7 @@ public class DataDaoStream implements DataDao {
     }
 
     private List<String> getFieldsNameList(String fileName) {
-        List<String> fieldsNameList = reader.read(fileName).get(HEADERS_INDEX).stream()
+        List<String> fieldsNameList = persistenceDAO.read(fileName).get(HEADERS_INDEX).stream()
                 .map(item -> item.toLowerCase())
                 .collect(Collectors.toList());
 
@@ -84,7 +85,7 @@ public class DataDaoStream implements DataDao {
 
     private List<List<String>> getSelectedRow(String fileName, List<String> validConditionList) {
 
-        List<List<String>> selectedRowContent = reader.read(fileName).stream().skip(1)
+        List<List<String>> selectedRowContent = persistenceDAO.read(fileName).stream().skip(1)
                 .filter(predicate(validConditionList))
                 .collect(Collectors.toList());
 
