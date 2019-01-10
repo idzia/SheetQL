@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class RequirementQuery {
 
     private List<String> selectFromCondition;
-    private List<String> whereCondition;
+    private List<List<String>> whereCondition;
 
     private static final int TABLE_NAME = 1;
     private static final int FIELDS = 0;
@@ -21,9 +21,15 @@ public class RequirementQuery {
         return selectFromCondition;
     }
 
-    public List<String> getWhereCondition() {
-        return whereCondition;
-    }
+//    public List<String> getWhereCondition() {
+//
+//        //    public String getWhere() {
+////        if (getParsedQueryList().size()==3){
+////            return getParsedQueryList().get(WHERE_CONDITION).toUpperCase();
+////        } else return "";
+////    }
+//        return whereCondition;
+//    }
 
     public String getTableName() {
         return selectFromCondition.get(TABLE_NAME);
@@ -33,7 +39,7 @@ public class RequirementQuery {
         this.selectFromCondition = selectFromCondition;
     }
 
-    public void setWhereCondition(List<String> whereCondition) {
+    public void setWhereCondition(List<List<String>> whereCondition) {
         this.whereCondition = whereCondition;
     }
 
@@ -43,7 +49,7 @@ public class RequirementQuery {
         return queryFieldsList;
     }
 
-    public List<String> getConditionList() {
+    public List<List<String>> getConditionList() {
         return whereCondition;
     }
 
