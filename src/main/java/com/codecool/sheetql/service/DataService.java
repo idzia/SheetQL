@@ -1,7 +1,7 @@
 package com.codecool.sheetql.service;
 
 import com.codecool.sheetql.model.RequirementQuery;
-import com.codecool.sheetql.parser.Parser;
+import com.codecool.sheetql.model.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

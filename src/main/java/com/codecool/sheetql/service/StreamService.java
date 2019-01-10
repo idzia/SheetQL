@@ -4,7 +4,7 @@ import com.codecool.sheetql.dao.PersistenceDAO;
 import com.codecool.sheetql.model.RequirementQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +22,7 @@ public class StreamService {
     private RequirementQuery requirementQuery;
 
     public static final Integer HEADERS_INDEX  = 0;
+    public final Integer SIGN_INDEX = 2;
 
     @Autowired
     public StreamService(PersistenceDAO persistenceDAO, RequirementQuery requirementQuery) {
@@ -42,6 +43,7 @@ public class StreamService {
         for(String item : fieldsNameList) {
             fieldsNameMap.put(item.toLowerCase(), fieldsNameList.indexOf(item));
         }
+        System.out.println(fieldsNameMap);
 
         return fieldsNameMap;
     }
@@ -80,14 +82,19 @@ public class StreamService {
                     return fieldsToSelect.stream()
                             .map(field -> item.get(fieldsNameMap.get(field))).collect(Collectors.toList());
                 }).collect(Collectors.toList());
+
         return selectedColumnContent;
     }
 
     private List<List<String>> getSelectedRow(String fileName, List<String> validConditionList) {
 
-        List<List<String>> selectedRowContent = persistenceDAO.read(fileName).stream().skip(1)
+        List<List<String>> selectedRowContent = persistenceDAO.read(fileName).stream()
+                .skip(1)
                 .filter(predicate(validConditionList))
                 .collect(Collectors.toList());
+
+        persistenceDAO.read(fileName).stream().skip(1)
+                .forEach(System.out::println);
 
         return selectedRowContent;
     }
@@ -96,31 +103,40 @@ public class StreamService {
 
         if (validConditionList.size()==0) {
             return item -> true;
+        } else {
+            String conditionSign = validConditionList.get(SIGN_INDEX);
+            String conditionValue = validConditionList.get(1);
+            Integer conditionIndexInList = fieldsNameMap.get(validConditionList.get(0));
 
-        } else if (validConditionList.get(2).equals("=")) {
-            return item -> item.get(fieldsNameMap.get(validConditionList.get(0))).equals(validConditionList.get(1));
+            switch (conditionSign) {
+                case "=":
+                    return item ->
+                            (item.get(conditionIndexInList)).toLowerCase().equals(conditionValue);
 
-        } else if (validConditionList.get(2).equals(">")) {
-            return item ->
-                    Integer.valueOf(item.get(fieldsNameMap.get(validConditionList.get(0)))) > Integer.valueOf(validConditionList.get(1));
+                case ">":
+                    return item ->
+                            Integer.valueOf(item.get(conditionIndexInList)) > Integer.valueOf(conditionValue);
+                case "<":
+                    return item ->
+                            Integer.valueOf(item.get(conditionIndexInList)) < Integer.valueOf(conditionValue);
 
-        } else if (validConditionList.get(2).equals("<")) {
-            return item ->
-                    Integer.valueOf(item.get(fieldsNameMap.get(validConditionList.get(0)))) < Integer.valueOf(validConditionList.get(1));
+                case "<>":
+                    return item ->
+                            Integer.valueOf(item.get(conditionIndexInList)) != Integer.valueOf(conditionValue);
 
-        } else if (validConditionList.get(2).equals("<>")) {
-            return item ->
-                    Integer.valueOf(item.get(fieldsNameMap.get(validConditionList.get(0)))) != Integer.valueOf(validConditionList.get(1));
-
-        } else if (validConditionList.get(2).equals("LIKE")) {
-            return item -> {
-                Pattern patern = Pattern.compile((validConditionList.get(1)).substring(1, (validConditionList.get(1).length())-1));
-                return patern.matcher((item.get(fieldsNameMap.get(validConditionList.get(0)))).toLowerCase()).find();
-            };
-
+                case "LIKE":
+                    return item -> {
+                        Pattern patern = Pattern.compile(conditionValue.substring(1, (conditionValue.length()) - 1));
+                        return patern.matcher((item.get(conditionIndexInList)).toLowerCase()).find(); };
+            }
         }
+
         return item -> false;
 
     }
 
+
+
+
+//end
 }

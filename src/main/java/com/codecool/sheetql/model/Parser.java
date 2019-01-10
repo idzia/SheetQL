@@ -1,6 +1,5 @@
-package com.codecool.sheetql.parser;
+package com.codecool.sheetql.model;
 
-import com.codecool.sheetql.model.RequirementQuery;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -12,13 +11,13 @@ import java.util.stream.Collectors;
 
 @Component
 public class Parser {
-    private List<String> parsedQueryList;
-    private List<String> validWhereConditionList;
+
     private RequirementQuery requirementQuery;
     private static final String DELIMETER = "SELECT|FROM|WHERE|select|from|where";
     private static final String OR_AND = "OR|AND|or|and";
     private static final String REGEX = "^SELECT\\s.+\\sFROM\\s.+$";
     private static final String REGEX_WHERE = "^SELECT\\s.+\\sFROM\\s.+\\sWHERE\\s.+$";
+    private static final String REGEX_CONDITION = ".+=.+|.+<>.+|.+>.+|.+<.+|.+[^<>=]\\sLIKE\\s'.+'";
 
     private static final int FIELDS = 0;
     private static final int FILE_NAME = 1;
@@ -67,9 +66,6 @@ public class Parser {
         return queryFieldsList;
     }
 
-//    public String getFileName() {
-//        return parsedQueryList.get(FILE_NAME);
-//    }
 
     public String getWhere() {
         if (getParsedQueryList().size()==3){
@@ -131,8 +127,8 @@ public class Parser {
 
     public boolean validateWhere(String whereConditionString) {
 
-        Pattern compileWhereCondition = Pattern.compile(".+=.+|.+<>.+|.+>.+|.+<.+|.+[^<>=]\\sLIKE\\s'.+'");
-//".+=.+|.+<>.+|.+>[^<].+|.+[^>]<.+|.+[^<>=]\\sLIKE\\s'.+'");
+        Pattern compileWhereCondition = Pattern.compile(REGEX_CONDITION);
+
         if (compileWhereCondition.matcher(whereConditionString).matches() || whereConditionString.equals("")) {
             return true;
         }
