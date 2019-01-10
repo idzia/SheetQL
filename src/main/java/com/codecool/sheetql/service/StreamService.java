@@ -21,14 +21,13 @@ public class StreamService {
     private PersistenceDAO persistenceDAO;
     private RequirementQuery requirementQuery;
 
-    public static final Integer HEADERS_INDEX  = 0;
+    public final Integer HEADERS_INDEX  = 0;
     public final Integer SIGN_INDEX = 2;
 
     @Autowired
     public StreamService(PersistenceDAO persistenceDAO, RequirementQuery requirementQuery) {
         this.persistenceDAO = persistenceDAO;
         this.requirementQuery = requirementQuery;
-
     }
 
     public void execute(){
@@ -43,7 +42,6 @@ public class StreamService {
         for(String item : fieldsNameList) {
             fieldsNameMap.put(item.toLowerCase(), fieldsNameList.indexOf(item));
         }
-        System.out.println(fieldsNameMap);
 
         return fieldsNameMap;
     }
@@ -70,7 +68,8 @@ public class StreamService {
             } else fieldsToSelectList.add(field);
         }
 
-        List<List<String>> selectedRowContent = getSelectedRow(fileName, requirementQuery.getConditionList());
+        List<Predicate<List<String>>> filterAnd = prepareFilterAndMethod(requirementQuery.getConditionList());
+        List<List<String>> selectedRowContent = getSelectedRow(fileName, filterAnd);
         List<List<String>> selectedContent = getSelectedColumn(selectedRowContent, fieldsToSelectList);
 
         return selectedContent;
@@ -86,20 +85,21 @@ public class StreamService {
         return selectedColumnContent;
     }
 
-    private List<List<String>> getSelectedRow(String fileName, List<String> validConditionList) {
-
+    private List<List<String>> getSelectedRow(String fileName, List<Predicate<List<String>>> filterAnd) {
         List<List<String>> selectedRowContent = persistenceDAO.read(fileName).stream()
                 .skip(1)
-                .filter(predicate(validConditionList))
-                .collect(Collectors.toList());
-
-        persistenceDAO.read(fileName).stream().skip(1)
-                .forEach(System.out::println);
-
+                .filter(filterAnd.stream().reduce(Predicate::and).orElse(p->false)).collect(Collectors.toList());
         return selectedRowContent;
     }
 
-    private Predicate<List<String>> predicate (List<String> validConditionList) {
+    private List<Predicate<List<String>>> prepareFilterAndMethod (List<List<String>> whereConditionList) {
+
+        return whereConditionList.stream()
+                .map(list -> predicate(list))
+                .collect(Collectors.toList());
+    }
+
+    public Predicate<List<String>> predicate (List<String> validConditionList) {
 
         if (validConditionList.size()==0) {
             return item -> true;
@@ -112,27 +112,22 @@ public class StreamService {
                 case "=":
                     return item ->
                             (item.get(conditionIndexInList)).toLowerCase().equals(conditionValue);
-
                 case ">":
                     return item ->
                             Integer.valueOf(item.get(conditionIndexInList)) > Integer.valueOf(conditionValue);
                 case "<":
                     return item ->
                             Integer.valueOf(item.get(conditionIndexInList)) < Integer.valueOf(conditionValue);
-
                 case "<>":
                     return item ->
                             Integer.valueOf(item.get(conditionIndexInList)) != Integer.valueOf(conditionValue);
-
                 case "LIKE":
                     return item -> {
                         Pattern patern = Pattern.compile(conditionValue.substring(1, (conditionValue.length()) - 1));
                         return patern.matcher((item.get(conditionIndexInList)).toLowerCase()).find(); };
             }
         }
-
         return item -> false;
-
     }
 
 
