@@ -2,6 +2,7 @@ package com.codecool.sheetql.controller;
 
 import com.codecool.sheetql.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class DataController {
 
     @GetMapping("/index")
     public String string() {
-        return "HELLO";
+        return "main";
     }
 
 

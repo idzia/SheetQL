@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SQL Google Sheets</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p>Insert query:</p>
+<form method = "post">
+    <input type = "text" name = "query"></input>
+    <button type = "submit">Submit</button>
+</form>
+<p th:text=${userQuery}> </>
+
+</body>
+</html>
