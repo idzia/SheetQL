@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class DataService {
@@ -33,6 +35,19 @@ public class DataService {
         } else throw new IllegalArgumentException("Query not valid");
 
         return answer;
+    }
+
+    public List<String> unpack(List<List<String>> list) {
+        List<String> unpackedList = new ArrayList<>();
+        for (List<String> record: list) {
+            unpackedList.add(createRecord(record));
+        }
+        return unpackedList;
+    }
+
+    private String createRecord(List<String> list) {
+        return list.stream()
+                .collect( Collectors.joining( " | " ));
     }
 
 }
